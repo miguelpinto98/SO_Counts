@@ -16,6 +16,27 @@ LinkedList iniciaDistritos() {
 	return createLinkedList(getNomeDistrito,comparaDistritos);
 }*/
 
+int searchFunction(void *distrito, void *nome) {
+	Distrito d = (Distrito) distrito;
+	char *str = (char *) nome;
+
+	if(strcmp(d->nome,nome)==0)
+		return 1;
+
+	return 0;
+} 
+
+Distrito verificaDistrito(LinkedList list, char *nome) {
+	Distrito d = searchLinkedList(list, searchFunction, nome);
+
+	if(!d) {
+		//int pid = fork(); /* isto escaxa tudo */
+		d = criaDistrito(strdup(nome),000);
+		insereDistrito(list,d);
+	}
+	return d;
+}
+
 void insereDistrito(LinkedList ll, Distrito d) {
 	pushLinkedList(ll, d);
 }

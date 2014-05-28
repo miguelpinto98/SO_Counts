@@ -3,3 +3,5 @@
 #include <string.h>
 
 char* removeID(char* ) ;
+
+char* getString(char* , int*) ;
