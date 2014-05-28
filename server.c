@@ -15,45 +15,42 @@ int main() {
 
 	LinkedList ll = createLinkedList(NULL,NULL);
 
-		Distrito d1 = criaDistrito("Porto",3214);
-		insereDistrito(ll,d1);
-		d1 = criaDistrito("Lisboa",123);
-		insereDistrito(ll,d1);
-
 	char buff[1024];
-	int n, x = 0;
-	int i=1;
-	while(i<300000) {
+	char line[1024];
+	int n, j=1, indice=0, fd;
+
+	while(j) {
 		n = read(pp,buff,1024);
+		
+		char ch1 = buff[0];
+		int in2 = getNumero((buff+2),&indice);
+		char* distritoNome = getString((buff+4),&indice);
 
-		char c = buff[0];
-		char* res = removeID(buff);
-		char* distritoNome = getString((buff+2),&x);
+		fd = open(distritoNome, O_RDONLY | O_WRONLY, 0777);
+		if(fd < 0) 
 
-		d1 = verificaDistrito(ll,distritoNome);
+		/* Incrementar */
+		if(ch1 == 'i') {
+			
+			
+			/* Ficheiro nao existe */
+			if(fd < 0) { 
+				fd = open(distritoNome, O_WRONLY | O_CREAT, 0777);
+				write(fd,(buff+4),strlen((buff+4)));
+			} else {
+				write(fd,(buff+4),strlen((buff+4)));
+			}
+			/*
+			while((n = read(fd,line,1024)) > 0) {
+				write(fd,(buff+4), strlen((buff+4)));
+				printf("dadas\n");
+			}	*/
 
-		if(d1) {
-			write(1,d1->nome,6);
+			close(fd);		
 		}
 
-		//write(1,res,n);
-		//write(1,dist,n);
-		i++;
+		/* Agregar */
+		if(ch1 == 'a') { ; }
 	}
-	
-	/*
-	Distrito d2 = criaDistrito("Porto",3214);
-	Distrito d3 = criaDistrito("Lisboa",3214);
-
-	insereDistrito(ll,d1);
-	insereDistrito(ll,d2);
-	insereDistrito(ll,d3);
-
-	printf("HELLO\n");
-	lista(ll->elems);
-	*/
-
-	//printf("\n\n");
-	//lista(ll->elems);
 	return 0;
 }

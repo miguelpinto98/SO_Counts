@@ -31,7 +31,7 @@ Distrito verificaDistrito(LinkedList list, char *nome) {
 
 	if(!d) {
 		//int pid = fork(); /* isto escaxa tudo */
-		d = criaDistrito(strdup(nome),000);
+		d = criaDistrito(nome,000);
 		insereDistrito(list,d);
 	}
 	return d;
