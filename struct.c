@@ -16,8 +16,8 @@ LinkedList iniciaDistritos() {
 	return createLinkedList(getNomeDistrito,comparaDistritos);
 }*/
 
-void insereDistrito(LinkedList lpages, Distrito d) {
-	pushLinkedList(lpages, d);
+void insereDistrito(LinkedList ll, Distrito d) {
+	pushLinkedList(ll, d);
 }
 
 Distrito criaDistrito(char *nm, int p) {
