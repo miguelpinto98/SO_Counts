@@ -45,58 +45,65 @@ int incrementar(char *nome[], int valor) {
 	if(file < 0) { 
 		file = open(distritoNome, O_WRONLY | O_CREAT, 0777);
 		char* line = malloc(100);
-		sprintf(line,"%s:%s:%d",nome[1],nome[2],valor);
+		sprintf(line,"%s:%s:%d\n",nome[1],nome[2],valor);
 		write(file,line,strlen(line));
 		close(file);
 	} else {
 		char* buffer = malloc(1024);
 		xx = read(file,buffer,1024);
-
-		char* line = malloc(xx);
-		sprintf(line,"%s:%s:",nome[1],nome[2]);
-			
-		inc = devolveValor(buffer,line,&numLidos,&chPorLer);
-		inc += valor;
-
-		len = int_len(inc);
-		char n[len];
-		len = sprintf(n,"%d",inc);
-
-		char* pointer = strstr(buffer,line);
-		int tam = strlen(line);
-		pointer = pointer + tam;
-
-		if(len == numLidos) {
-			for(i=0; i < len; i++)
-				pointer[i] = n[i];
-
+		//caso concelho-freguesia não exista
+		if(strstr(buffer,nome[1]) == NULL) {
+			char* new = malloc(100);
+			sprintf(new,"%s:%s:%d\n",nome[1],nome[2],valor);
+			write(file,new,strlen(new));
 			close(file);
-			file = open(distritoNome, O_RDWR, 0700);
-			write(file,buffer,strlen(buffer));
 		} else {
-			int diff = len-numLidos;
-			printf("%d - %d \n",len,numLidos );
-			char *aux = malloc(xx+diff);
 
-			int aa = xx-chPorLer+tam;
-			for(i=0; i<aa; i++)
-				aux[i] = buffer[i];
+			char* line = malloc(xx);
+			sprintf(line,"%s:%s:",nome[1],nome[2]);
+				
+			inc = devolveValor(buffer,line,&numLidos,&chPorLer);
+			inc += valor;
 
-			for(j=0; j<len; j++) {
-				aux[i] = n[j];
-				i++;
+			len = int_len(inc);
+			char n[len];
+			len = sprintf(n,"%d",inc);
+
+			char* pointer = strstr(buffer,line);
+			int tam = strlen(line);
+			pointer = pointer + tam;
+
+			if(len == numLidos) {
+				for(i=0; i < len; i++)
+					pointer[i] = n[i];
+
+				close(file);
+				file = open(distritoNome, O_RDWR, 0700);
+				write(file,buffer,strlen(buffer));
+			} else {
+				int diff = len-numLidos;
+				char *aux = malloc(xx+diff);
+
+				int aa = xx-chPorLer+tam;
+				for(i=0; i<aa; i++)
+					aux[i] = buffer[i];
+
+				for(j=0; j<len; j++) {
+					aux[i] = n[j];
+					i++;
+				}
+				aux[i] = '\n'; i++;
+
+				tam = strlen(pointer);
+				for(j=numLidos+1; j<=tam; j++) {
+					aux[i] = pointer[j];
+					i++;
+				}
+
+				close(file);
+				file = open(distritoNome, O_RDWR, 0700);
+				write(file,aux,strlen(aux));
 			}
-			aux[i] = '\n'; i++;
-
-			tam = strlen(pointer);
-			for(j=numLidos+1; j<=tam; j++) {
-				aux[i] = pointer[j];
-				i++;
-			}
-
-			close(file);
-			file = open(distritoNome, O_RDWR, 0700);
-			write(file,aux,strlen(aux));
 		}
 	}	
 	return 1;
@@ -131,9 +138,9 @@ int int_len (int value){
 int main() {
 	char* array[3];
 	array[0]="Porto";
-	array[1]="Felgueiras";
-	array[2]="Revinhade";
-	incrementar(array,10000000000);
+	array[1]="Amarante";
+	array[2]="Cabrões";
+	incrementar(array,1000);
 
 	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10";
 	char* search = "Felgueiras:Torrados:";
