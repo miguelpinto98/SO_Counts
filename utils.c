@@ -35,60 +35,87 @@ void closeFicheiro(int id) {
 	close(id);
 }*/
 
-//Porto:Felgueiras:Revinhade
 int incrementar(char *nome[], int valor) {
 	int file;
 	char* distritoNome = nome[0];
 	file = open(distritoNome, O_RDWR, 0700);
+	
+	int xx=0, numLidos=0, chPorLer=0, inc=0, len=0, i=0, j;	
 
 	if(file < 0) { 
-				file = open(distritoNome, O_WRONLY | O_CREAT, 0777);
-				char* line = malloc(100);
-				sprintf(line,"%s:%s:%d",nome[1],nome[2],valor);
-				write(file,line,strlen(line));
-				close(file);
-			} else {
-				char* buffer = malloc(1024);
-				read(file,buffer,1024);
-				char* line = malloc(100);
-				sprintf(line,"%s:%s:",nome[1],nome[2]);
-				int inc = devolveValor(buffer,line);
-				inc = inc + valor;
-				int len = int_len(inc);
-				char n[len];
-				sprintf(n,"%d",inc);
-				int i = 0;
-				/*if(int_len(inc) > int_len(valor)) {
-				}*/
-				//se ultrapassar 100, nao da.
-				//falta fazer shift
-				char* pointer = strstr(buffer,line);
-				int tam = strlen(line);
-				pointer = pointer + tam;
-				while(pointer[i] != '\n') {
-						pointer[i] = n[i];
-						i++;
-					}
+		file = open(distritoNome, O_WRONLY | O_CREAT, 0777);
+		char* line = malloc(100);
+		sprintf(line,"%s:%s:%d",nome[1],nome[2],valor);
+		write(file,line,strlen(line));
+		close(file);
+	} else {
+		char* buffer = malloc(1024);
+		xx = read(file,buffer,1024);
+
+		char* line = malloc(xx);
+		sprintf(line,"%s:%s:",nome[1],nome[2]);
+			
+		inc = devolveValor(buffer,line,&numLidos,&chPorLer);
+		inc += valor;
+
+		len = int_len(inc);
+		char n[len];
+		len = sprintf(n,"%d",inc);
+
+		char* pointer = strstr(buffer,line);
+		int tam = strlen(line);
+		pointer = pointer + tam;
+
+		if(len == numLidos) {
+			for(i=0; i < len; i++)
 				pointer[i] = n[i];
-				pointer[i+1] = '\0';
-				close(file);
-				file = open(distritoNome, O_RDWR, 0700);
-				write(file,buffer,strlen(buffer));
-			}	
+
+			close(file);
+			file = open(distritoNome, O_RDWR, 0700);
+			write(file,buffer,strlen(buffer));
+		} else {
+			int diff = len-numLidos;
+			printf("%d - %d \n",len,numLidos );
+			char *aux = malloc(xx+diff);
+
+			int aa = xx-chPorLer+tam;
+			for(i=0; i<aa; i++)
+				aux[i] = buffer[i];
+
+			for(j=0; j<len; j++) {
+				aux[i] = n[j];
+				i++;
+			}
+			aux[i] = '\n'; i++;
+
+			tam = strlen(pointer);
+			for(j=numLidos+1; j<=tam; j++) {
+				aux[i] = pointer[j];
+				i++;
+			}
+
+			close(file);
+			file = open(distritoNome, O_RDWR, 0700);
+			write(file,aux,strlen(aux));
+		}
+	}	
 	return 1;
 }
 
-int devolveValor(char* buffer, char* search) {
+int devolveValor(char* buffer, char* search, int *n, int *x) {
 	char* pointer = strstr(buffer,search);
-	int i;
-	int res=0;
+	*x = strlen(pointer);
+	
+	int i, res=0;
 	int tam = strlen(search);
 	pointer = pointer + tam;
+	
 	if(pointer != NULL) {
 		char numero[5];
 		for (i = 0; pointer[i] != '\n'; i++) {
 			numero[i] = pointer[i];
 		}
+		*n = i;
 		numero[i] = '\0';
 		res = atoi(numero);
 	}
@@ -106,7 +133,7 @@ int main() {
 	array[0]="Porto";
 	array[1]="Felgueiras";
 	array[2]="Revinhade";
-	incrementar(array,30);
+	incrementar(array,10000000000);
 
 	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10";
 	char* search = "Felgueiras:Torrados:";
