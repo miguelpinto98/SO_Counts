@@ -287,7 +287,7 @@ void preparaPedido(char *buffer, int bufferSize) {
 		agregar(array,valor,str);
 	}
 }
-
+/*
 int main() {
 	char* array[3];
 	array[0]="Porto";
@@ -304,4 +304,4 @@ int main() {
 	//printf("%d\n",devolveValor(buffer,search));
 	//somatorio(buffer);
 	return 1;
-}
+}*/
