@@ -1,5 +1,7 @@
 #include "utils.h"
+#include "stdio.h"
 #include <fcntl.h>
+#include <string.h>
 
 char *removeID(char *s) {
 	return (s+2);
@@ -129,6 +131,79 @@ int devolveValor(char* buffer, char* search, int *n, int *x) {
 	return res;
 }
 
+int agregar(char* prefixo[], int nivel, char* path) {
+	int file, distrito, i = 0, j = 0, pos = 0;
+	file = open(path, O_WRONLY | O_CREAT, 0777);
+
+	if(nivel == 0) {
+		distrito = open(prefixo[0], O_RDWR, 0700);
+		char* buffer = malloc(1024);
+		read(distrito,buffer,1024);
+		close(distrito);
+
+		write(file,buffer,strlen(buffer));
+
+		int total = somatorio(buffer);
+		char* agregacao = malloc(100);
+		sprintf(agregacao,"\nTOTAL:%d\n",total);
+		write(file,agregacao,strlen(agregacao));
+		close(file);
+	}
+	if (nivel == 1) {
+		distrito = open(prefixo[0],O_RDWR,0700);
+		char* buffer = malloc(1024);
+		read(distrito,buffer,1024);
+		close(distrito);
+		char* concelho = prefixo[1];
+		while(j < contaN(buffer)) {
+			char* line = malloc(100);
+			pos = 0;
+			while(buffer[i] != '\n') {
+				line[pos] = buffer[i];
+				pos++;
+				i++;
+			}
+			line[pos] = '\n';
+			i++;
+			char* pointer = strstr(line,concelho);
+			if(pointer != NULL) {
+				write(file,line,strlen(line));
+			}
+			j = j++;
+		}
+		close(file);
+	}
+	return 1;
+}
+
+int somatorio(char* buffer) {
+	int res, i = 0;
+	char *p = buffer;
+	int len = contaN(buffer);
+	int somatorio[len];
+	while (*p) {
+		if (isdigit(*p)) {
+			long val = strtol(p, &p, 10);
+			somatorio[i] = val;
+			res = res + somatorio[i];
+		} else {
+			p++;
+		}
+	}
+	return res;
+}
+
+int contaN(char* buffer) {
+	int res=0;
+	int i=0;
+	while(buffer[i] != '\0') {
+		if(buffer[i] == '\n')
+			res++;
+		i++;
+	}
+	return res;
+}
+
 int int_len (int value){
   int l=1;
   while(value>9){ l++; value/=10; }
@@ -140,10 +215,14 @@ int main() {
 	array[0]="Porto";
 	array[1]="Amarante";
 	array[2]="Cabrões";
-	incrementar(array,1000);
-
-	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10";
+	//incrementar(array,1000);
+	char* agrega[2];
+	agrega[0] = "Porto";
+	agrega[1] = "Felgueiras";
+	agregar(agrega,1,"Agrega_Felgueiras");
+	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10\n";
 	char* search = "Felgueiras:Torrados:";
 	//printf("%d\n",devolveValor(buffer,search));
+	//somatorio(buffer);
 	return 1;
 }
