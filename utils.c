@@ -1,6 +1,5 @@
 #include "utils.h"
 #include "struct.h"
-#include "linkedlist/linkedlist.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdio.h>
@@ -178,9 +177,46 @@ int agregar(char* prefixo[], int nivel, char* path) {
 			}
 			j++;
 		}
-		write(file,bufferAux,strlen(bufferAux));
+		//filtrar concelho
+		j=0;
+		while(bufferAux[j] != '\0') {
+			int indice = strcspn(bufferAux,":");
+			char* aux = malloc(1024);
+			char* aux2 = malloc(100);
+			strcpy(aux,bufferAux+indice+1+j);
+			i = 0;
+			while(aux[i] != '\n') {
+				i++;
+			}
+			strncpy(aux2,bufferAux+indice+j+1,i+1);
+			write(file,aux2,strlen(aux2));
+			j = j + strlen(aux2) + strlen(concelho) + 1;
+		}
 
 		int total = somatorio(bufferAux);
+		char* agregacao = malloc(100);
+		sprintf(agregacao,"\nTOTAL:%d\n",total);
+		write(file,agregacao,strlen(agregacao));
+		close(file);
+	}
+
+	if(nivel == 2) {
+		distrito = open(prefixo[0],O_RDWR,0700);
+		char* buffer = malloc(1024);
+		xx = read(distrito,buffer,1024);
+		close(distrito);
+		char* freguesia = prefixo[2];
+
+		char* pointer = strstr(buffer,freguesia);
+		char* aux = malloc(100);
+		i = 0;
+		while(pointer[i] != '\n') {
+			i++;
+		}
+		strncpy(aux,pointer,i+1);
+		write(file,aux,strlen(aux));
+
+		int total = somatorio(aux);
 		char* agregacao = malloc(100);
 		sprintf(agregacao,"\nTOTAL:%d\n",total);
 		write(file,agregacao,strlen(agregacao));
@@ -190,7 +226,7 @@ int agregar(char* prefixo[], int nivel, char* path) {
 }
 
 int somatorio(char* buffer) {
-	int res, i = 0;
+	int res=0, i = 0;
 	char *p = buffer;
 	int len = contaN(buffer);
 	int somatorio[len];
@@ -223,7 +259,7 @@ int int_len (int value){
   return l;
 }
 
-int main() {
+/*int main() {
 	char* array[3];
 	array[0]="Porto";
 	array[1]="Amarante";
@@ -232,10 +268,11 @@ int main() {
 	char* agrega[2];
 	agrega[0] = "Porto";
 	agrega[1] = "Felgueiras";
-	agregar(agrega,1,"Agrega_Felgueiras");
+	agrega[2] = "Revinhade";
+	agregar(agrega,2,"Agrega_Revinhade");
 	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10\n";
 	char* search = "Felgueiras:Torrados:";
 	//printf("%d\n",devolveValor(buffer,search));
 	//somatorio(buffer);
 	return 1;
-}
+}*/
