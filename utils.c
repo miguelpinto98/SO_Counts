@@ -1,7 +1,13 @@
 #include "utils.h"
-#include "stdio.h"
-#include <fcntl.h>
+#include "struct.h"
+#include "linkedlist/linkedlist.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 char *removeID(char *s) {
 	return (s+2);
@@ -132,7 +138,7 @@ int devolveValor(char* buffer, char* search, int *n, int *x) {
 }
 
 int agregar(char* prefixo[], int nivel, char* path) {
-	int file, distrito, i = 0, j = 0, pos = 0;
+	int file, distrito, i = 0, xx = 0, pos = 0, j = 0;
 	file = open(path, O_WRONLY | O_CREAT, 0777);
 
 	if(nivel == 0) {
@@ -152,7 +158,8 @@ int agregar(char* prefixo[], int nivel, char* path) {
 	if (nivel == 1) {
 		distrito = open(prefixo[0],O_RDWR,0700);
 		char* buffer = malloc(1024);
-		read(distrito,buffer,1024);
+		char* bufferAux = malloc(1024);
+		xx = read(distrito,buffer,1024);
 		close(distrito);
 		char* concelho = prefixo[1];
 		while(j < contaN(buffer)) {
@@ -167,10 +174,16 @@ int agregar(char* prefixo[], int nivel, char* path) {
 			i++;
 			char* pointer = strstr(line,concelho);
 			if(pointer != NULL) {
-				write(file,line,strlen(line));
+				strcat(bufferAux,line);
 			}
-			j = j++;
+			j++;
 		}
+		write(file,bufferAux,strlen(bufferAux));
+
+		int total = somatorio(bufferAux);
+		char* agregacao = malloc(100);
+		sprintf(agregacao,"\nTOTAL:%d\n",total);
+		write(file,agregacao,strlen(agregacao));
 		close(file);
 	}
 	return 1;
