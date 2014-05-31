@@ -42,6 +42,61 @@ void closeFicheiro(int id) {
 	close(id);
 }*/
 
+int contaN(char* buffer) {
+	int res=0;
+	int i=0;
+	while(buffer[i] != '\0') {
+		if(buffer[i] == '\n')
+			res++;
+		i++;
+	}
+	return res;
+}
+
+int somatorio(char* buffer) {
+	int res=0, i = 0;
+	char *p = buffer;
+	int len = contaN(buffer);
+	int somatorio[len];
+	while (*p) {
+		if (isdigit(*p)) {
+			long val = strtol(p, &p, 10);
+			somatorio[i] = val;
+			res = res + somatorio[i];
+		} else {
+			p++;
+		}
+	}
+	return res;
+}
+
+int int_len (int value){
+  int l=1;
+  while(value>9){ l++; value/=10; }
+  return l;
+}
+
+
+int devolveValor(char* buffer, char* search, int *n, int *x) {
+	char* pointer = strstr(buffer,search);
+	*x = strlen(pointer);
+	
+	int i, res=0;
+	int tam = strlen(search);
+	pointer = pointer + tam;
+	
+	if(pointer != NULL) {
+		char numero[5];
+		for (i = 0; pointer[i] != '\n'; i++) {
+			numero[i] = pointer[i];
+		}
+		*n = i;
+		numero[i] = '\0';
+		res = atoi(numero);
+	}
+	return res;
+}
+
 int incrementar(char *nome[], int valor) {
 	int file;
 	char* distritoNome = nome[0];
@@ -114,26 +169,6 @@ int incrementar(char *nome[], int valor) {
 		}
 	}	
 	return 1;
-}
-
-int devolveValor(char* buffer, char* search, int *n, int *x) {
-	char* pointer = strstr(buffer,search);
-	*x = strlen(pointer);
-	
-	int i, res=0;
-	int tam = strlen(search);
-	pointer = pointer + tam;
-	
-	if(pointer != NULL) {
-		char numero[5];
-		for (i = 0; pointer[i] != '\n'; i++) {
-			numero[i] = pointer[i];
-		}
-		*n = i;
-		numero[i] = '\0';
-		res = atoi(numero);
-	}
-	return res;
 }
 
 int agregar(char* prefixo[], int nivel, char* path) {
@@ -223,40 +258,6 @@ int agregar(char* prefixo[], int nivel, char* path) {
 		close(file);
 	}
 	return 1;
-}
-
-int somatorio(char* buffer) {
-	int res=0, i = 0;
-	char *p = buffer;
-	int len = contaN(buffer);
-	int somatorio[len];
-	while (*p) {
-		if (isdigit(*p)) {
-			long val = strtol(p, &p, 10);
-			somatorio[i] = val;
-			res = res + somatorio[i];
-		} else {
-			p++;
-		}
-	}
-	return res;
-}
-
-int contaN(char* buffer) {
-	int res=0;
-	int i=0;
-	while(buffer[i] != '\0') {
-		if(buffer[i] == '\n')
-			res++;
-		i++;
-	}
-	return res;
-}
-
-int int_len (int value){
-  int l=1;
-  while(value>9){ l++; value/=10; }
-  return l;
 }
 
 /*int main() {
