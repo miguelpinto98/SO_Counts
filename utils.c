@@ -222,7 +222,7 @@ int int_len (int value){
   while(value>9){ l++; value/=10; }
   return l;
 }
-
+/*
 int main() {
 	char* array[3];
 	array[0]="Porto";
@@ -238,4 +238,4 @@ int main() {
 	//printf("%d\n",devolveValor(buffer,search));
 	//somatorio(buffer);
 	return 1;
-}
+}*/

@@ -7,3 +7,5 @@ char* removeID(char* ) ;
 char* getString(char* , int*) ;
 
 int getNumero(char *, int *) ;
+
+int incrementar(char **, int ) ;

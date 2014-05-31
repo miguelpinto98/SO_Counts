@@ -16,41 +16,48 @@ int main() {
 	LinkedList ll = createLinkedList(NULL,NULL);
 
 	char buff[1024];
-	char line[1024];
+	char childBuffer[1024];
 	int n, j=1, indice=0, fd;
+	Distrito d = NULL;
 
 	while(j) {
 		n = read(pp,buff,1024);
 		
-		char ch1 = buff[0];
+		//char ch1 = buff[0];
 		int in2 = getNumero((buff+2),&indice);
 		char* distritoNome = getString((buff+4),&indice);
 
-		fd = open(distritoNome, O_RDONLY | O_WRONLY, 0777);
-		if(fd < 0) 
+		if((d = verificaDistrito(ll,distritoNome)) != NULL) {
+			close(d->fd[0]);
+			write(d->fd[1],buff,n);
+		} else {
+			d = criaDistrito(distritoNome);
+			insereDistrito(ll,d);
 
-		/* Incrementar */
-		if(ch1 == 'i') {
-			
-			
-			/* Ficheiro nao existe */
-			if(fd < 0) { 
-				fd = open(distritoNome, O_WRONLY | O_CREAT, 0777);
-				write(fd,(buff+4),strlen((buff+4)));
-			} else {
-				write(fd,(buff+4),strlen((buff+4)));
+			int p = fork();
+			if(p==0) {
+				while(1) {
+					close(d->fd[1]);
+					read(d->fd[0],childBuffer,1024);
+					write(1,childBuffer,1024);
+
+					char ch1 = childBuffer[0];
+					int in2 = getNumero((childBuffer+2),&indice);
+					if(ch1=='i') {
+						char *array[3];
+						array[0] = strdup("Braga");
+						array[1] = strdup("Braga");
+						array[2] = strdup("S.Vitor");
+
+						printf("%s\n", childBuffer);
+						incrementar(array,in2);
+					}
+
+
+					exit(0); 
+				}
 			}
-			/*
-			while((n = read(fd,line,1024)) > 0) {
-				write(fd,(buff+4), strlen((buff+4)));
-				printf("dadas\n");
-			}	*/
-
-			close(fd);		
 		}
-
-		/* Agregar */
-		if(ch1 == 'a') { ; }
 	}
 	return 0;
 }

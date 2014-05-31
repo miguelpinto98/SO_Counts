@@ -27,31 +27,26 @@ int searchFunction(void *distrito, void *nome) {
 } 
 
 Distrito verificaDistrito(LinkedList list, char *nome) {
-	Distrito d = searchLinkedList(list, searchFunction, nome);
-
-	if(!d) {
-		//int pid = fork(); /* isto escaxa tudo */
-		d = criaDistrito(nome,000);
-		insereDistrito(list,d);
-	}
-	return d;
+	return searchLinkedList(list, searchFunction, nome);
 }
 
 void insereDistrito(LinkedList ll, Distrito d) {
 	pushLinkedList(ll, d);
+	printf("Inseri %s\n", d->nome);
 }
 
-Distrito criaDistrito(char *nm, int p) {
+Distrito criaDistrito(char *nm) {
 	Distrito dist = NULL;
 
 	dist = (Distrito)malloc(sizeof(NDistrito));
 	dist->nome = strdup(nm);
-	dist->pid = p;
-	dist->nagrupada = 0;
+	pipe(dist->fd);
+
+	//dist->nagrupada = 0;
 
 	return dist; 
 }
-
+/*
 void lista(LinkedElem ll) {
 	LinkedElem aux = ll;
 	
@@ -62,4 +57,4 @@ void lista(LinkedElem ll) {
 
 		aux = aux->next;
 	}
-}
+}*/

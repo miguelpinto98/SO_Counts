@@ -12,13 +12,12 @@
 
 typedef struct sDistrito {
 	char* nome;
-	int pid;
-	int nagrupada;
+	int fd[2];
 } *Distrito, NDistrito;
 
 void insereDistrito(LinkedList, Distrito) ;
 
-Distrito criaDistrito(char *, int) ;
+Distrito criaDistrito(char *) ;
 
 void lista(LinkedElem) ;
 
