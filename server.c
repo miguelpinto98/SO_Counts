@@ -17,15 +17,15 @@ int main() {
 
 	char buff[1024];
 	char childBuffer[1024];
-	int n, j=1, indice=0, fd;
+	int n, j=1, indice=0, fd, tam=0;
 	Distrito d = NULL;
 
 	while(j) {
 		n = read(pp,buff,1024);
 		
-		//char ch1 = buff[0];
-		int in2 = getNumero((buff+2),&indice);
-		char* distritoNome = getString((buff+4),&indice);
+		int in = getNumero((buff+2),&indice);
+		tam = 2 + indice;
+		char* distritoNome = getString((buff+tam),&indice);
 
 		if((d = verificaDistrito(ll,distritoNome)) != NULL) {
 			close(d->fd[0]);
@@ -36,26 +36,16 @@ int main() {
 
 			int p = fork();
 			if(p==0) {
+				int x = 0;
 				while(1) {
 					close(d->fd[1]);
-					read(d->fd[0],childBuffer,1024);
-					write(1,childBuffer,1024);
-
-					char ch1 = childBuffer[0];
-					int in2 = getNumero((childBuffer+2),&indice);
-					if(ch1=='i') {
-						char *array[3];
-						array[0] = strdup("Braga");
-						array[1] = strdup("Braga");
-						array[2] = strdup("S.Vitor");
-
-						printf("%s\n", childBuffer);
-						incrementar(array,in2);
-					}
-
-
-					exit(0); 
+					x=read(d->fd[0],childBuffer,1024);
+					
+					preparaPedido(childBuffer,x);
 				}
+			} else {
+				close(d->fd[0]);
+				write(d->fd[1],buff,n);
 			}
 		}
 	}

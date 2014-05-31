@@ -20,7 +20,7 @@ char *getString(char *buff, int *n) {
 		aux[i] = buff[i];
 
 	aux[i] = '\0';
-	*n = i;
+	*n = i+1;
 
 	return aux;
 }
@@ -33,14 +33,10 @@ int getNumero(char *buff, int *n) {
 		aux[i] = buff[i];
 	}
 	aux[i] = '\n';
-	*n = i;
+	*n = i+1;
 
 	return atoi(aux);
 }
-/*
-void closeFicheiro(int id) {
-	close(id);
-}*/
 
 int contaN(char* buffer) {
 	int res=0;
@@ -258,6 +254,33 @@ int agregar(char* prefixo[], int nivel, char* path) {
 		close(file);
 	}
 	return 1;
+}
+
+void preparaPedido(char *buffer, int bufferSize) {
+	int lidos = 0, tam = 2;
+	char *array[3];
+	
+	char tipo = buffer[0];
+	int valor = getNumero(buffer+tam,&lidos);
+	tam += lidos;
+
+	array[0] = strdup(getString(buffer+tam,&lidos));
+	tam += lidos;
+	
+	array[1] = strdup(getString(buffer+tam,&lidos));
+	tam += lidos;
+
+	if(tam < bufferSize)
+		array[2] = strdup(getString(buffer+tam,&lidos));
+	
+	if(tipo == 'i')
+		incrementar(array,valor);
+	else {
+		tam += lidos;
+		char *str = strdup(getString(buffer+tam,&lidos));
+
+		agregar(array,valor,str);
+	}
 }
 
 /*int main() {

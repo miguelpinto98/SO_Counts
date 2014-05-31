@@ -10,7 +10,7 @@ int main(int argc, char const *argv[]) {
 	int pp = open("/tmp/options", O_WRONLY, 0700);
 	int n = 0;
 
-	char *aux = "2:Braga:Braga:S.Vitor"; /* Fazer Menu Para Isto */
+	char *aux = "5:Porto:Braga:S.Vitor"; /* Fazer Menu Para Isto */
 	char line[strlen(aux)+3];
 
 	if(n==0) { //incrementar
