@@ -105,6 +105,7 @@ int incrementar(char *nome[], int valor) {
 		char* line = malloc(100);
 		sprintf(line,"%s:%s:%d\n",nome[1],nome[2],valor);
 		write(file,line,strlen(line));
+		free(line);
 		close(file);
 	} else {
 		char* buffer = malloc(1024);
@@ -114,6 +115,7 @@ int incrementar(char *nome[], int valor) {
 			char* new = malloc(100);
 			sprintf(new,"%s:%s:%d\n",nome[1],nome[2],valor);
 			write(file,new,strlen(new));
+			free(new);
 			close(file);
 		} else {
 
@@ -161,8 +163,11 @@ int incrementar(char *nome[], int valor) {
 				close(file);
 				file = open(distritoNome, O_RDWR, 0700);
 				write(file,aux,strlen(aux));
+				free(aux);
 			}
+			free(line);
 		}
+		free(buffer);
 	}	
 	return 1;
 }
@@ -283,20 +288,20 @@ void preparaPedido(char *buffer, int bufferSize) {
 	}
 }
 
-/*int main() {
+int main() {
 	char* array[3];
 	array[0]="Porto";
 	array[1]="Amarante";
 	array[2]="Cabrões";
-	//incrementar(array,1000);
+	incrementar(array,100);
 	char* agrega[2];
 	agrega[0] = "Porto";
 	agrega[1] = "Felgueiras";
 	agrega[2] = "Revinhade";
-	agregar(agrega,2,"Agrega_Revinhade");
+	//agregar(agrega,2,"Agrega_Revinhade");
 	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10\n";
 	char* search = "Felgueiras:Torrados:";
 	//printf("%d\n",devolveValor(buffer,search));
 	//somatorio(buffer);
 	return 1;
-}*/
+}
