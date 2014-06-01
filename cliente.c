@@ -32,7 +32,7 @@ char* menuIncrementar(){
 	char* menu = strdup("################################\n#         Incrementar          #\n#                              #\n# Em que distrito?             #\n");
 	write(1,menu,strlen(menu));
 	r1=read(0,distritoAux,100);
-	printf("%s\n", distritoAux);
+	//printf("%s\n", distritoAux);
 	while(r1==1){
 		char* dist = strdup("# Em que distrito?             #\n");
 		write(1,dist,strlen(dist));
@@ -62,13 +62,13 @@ char* menuIncrementar(){
 	}
 	strncpy(numInc,numIncAux,r4-1);
 	strcpy(res,"i:");
+	strcat(res,numInc);
+	strcat(res,":");
 	strcat(res,distrito);
 	strcat(res,":");
 	strcat(res,concelho);
 	strcat(res,":");
-	strcat(res,freguesia);
-	strcat(res,":");
-	strcat(res,numInc);
+	strcat(res,freguesia);	
 	
 	return res;
 }
@@ -152,7 +152,7 @@ char* menuAgregar(){
 }
 
 int main(int argc, char const *argv[]) {
-	int pp = open("/tmp/options", O_WRONLY, 0700);
+	
 	int flag = 1;
 
 	while(flag){
@@ -167,19 +167,22 @@ int main(int argc, char const *argv[]) {
 		if(res[0]=='1') { //incrementar
 			//printf("Estou no incrementar");
 			line = menuIncrementar();
-			printf("%s",line);
+			//printf("%s",line);
 			flag=0;
 		} else 
 		if(res[0]=='2'){	//agregar
 			line = menuAgregar();
-			printf("%s",line);
+			//printf("%s",line);
 			//strcpy(line,"a:");
 			//strcat(line,aux);
 			flag=0;
 		}
 
-		if(!flag)
+		if(!flag) {
+			int pp = open("/tmp/options", O_WRONLY, 0700);
 			write(pp, line, strlen(line));
+			close(pp);
+		}
 	}
 
 	return 0;

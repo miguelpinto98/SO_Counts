@@ -293,6 +293,7 @@ void preparaPedido(char *buffer, int bufferSize) {
 		agregar(array,valor,str);
 	}
 }
+
 /*int main() {
 	char* array[3];
 	array[0]="Porto";
@@ -304,9 +305,14 @@ void preparaPedido(char *buffer, int bufferSize) {
 	array2[0]="Porto";
 	array2[1]="Amarante";
 	array2[2]="Revinhade";	
-	char* agrega[2];
 	incrementar(array2,2);
 
+	array[0]="Porto";
+	array[1]="Amarante";
+	array[2]="ABC";
+	incrementar(array,100);
+
+	char* agrega[2];
 	agrega[0] = "Porto";
 	agrega[1] = "Felgueiras";
 	agrega[2] = "Revinhade";
