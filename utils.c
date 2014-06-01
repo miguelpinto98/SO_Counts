@@ -117,11 +117,19 @@ int incrementar(char *nome[], int valor) {
 			write(file,new,strlen(new));
 			free(new);
 			close(file);
-		} else {
-
+		}
+		char* line = malloc(xx);
+		sprintf(line,"%s:%s:",nome[1],nome[2]);
+		if(strstr(buffer,line) == NULL) {
+			char* new = malloc(100);
+			sprintf(new,"%s:%s:%d\n",nome[1],nome[2],valor);
+			write(file,new,strlen(new));
+			free(new);
+			close(file);
+		} 
+		else {
 			char* line = malloc(xx);
 			sprintf(line,"%s:%s:",nome[1],nome[2]);
-				
 			inc = devolveValor(buffer,line,&numLidos,&chPorLer);
 			inc += valor;
 
@@ -153,13 +161,11 @@ int incrementar(char *nome[], int valor) {
 					i++;
 				}
 				aux[i] = '\n'; i++;
-
 				tam = strlen(pointer);
 				for(j=numLidos+1; j<=tam; j++) {
 					aux[i] = pointer[j];
 					i++;
 				}
-
 				close(file);
 				file = open(distritoNome, O_RDWR, 0700);
 				write(file,aux,strlen(aux));
@@ -287,14 +293,20 @@ void preparaPedido(char *buffer, int bufferSize) {
 		agregar(array,valor,str);
 	}
 }
-/*
-int main() {
+/*int main() {
 	char* array[3];
 	array[0]="Porto";
 	array[1]="Amarante";
 	array[2]="Cabrões";
-	incrementar(array,100);
+	incrementar(array,1);
+
+	char* array2[3];
+	array2[0]="Porto";
+	array2[1]="Amarante";
+	array2[2]="Revinhade";	
 	char* agrega[2];
+	incrementar(array2,2);
+
 	agrega[0] = "Porto";
 	agrega[1] = "Felgueiras";
 	agrega[2] = "Revinhade";
