@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+LinkedList ll = NULL;
+
 char *removeID(char *s) {
 	return (s+2);
 }
@@ -108,6 +110,10 @@ int devolveValor(char* buffer, char* search, int *n, int *x) {
 }
 
 int incrementar(char *nome[], int valor) {
+	
+	Distrito d = NULL;
+	d = verificaDistrito(ll,nome[0]);
+	d->agregado += valor;
 	int file;
 	char* distritoNome = nome[0];
 	file = open(distritoNome, O_RDWR, 0700);
@@ -197,19 +203,16 @@ int agregar(char* prefixo[], int nivel, char* path) {
 	file = open(path, O_WRONLY | O_CREAT, 0777);
 
 	if(nivel == 0) {
-		distrito = open(prefixo[0], O_RDWR, 0700);
-		char* buffer = malloc(1024);
-		read(distrito,buffer,1024);
-		close(distrito);
-
-		write(file,buffer,strlen(buffer));
-
-		int total = somatorio(buffer);
 		char* agregacao = malloc(100);
-		sprintf(agregacao,"\nTOTAL:%d\n",total);
+		
+		Distrito d = NULL;
+		d = verificaDistrito(ll,prefixo[0]);
+		int total = d->agregado;
+
+		sprintf(agregacao,"TOTAL:%d\n",total);
 		write(file,agregacao,strlen(agregacao));
 		close(file);
-		free(buffer);
+		free(agregacao);
 	}
 	if (nivel == 1) {
 		distrito = open(prefixo[0],O_RDWR,0700);
@@ -289,7 +292,8 @@ int agregar(char* prefixo[], int nivel, char* path) {
 	return 1;
 }
 
-void preparaPedido(char *buffer) {
+void preparaPedido(char *buffer, LinkedList list) {
+	ll = list;
 	int lidos = 0, tam = 2;
 	char *array[3];
 	

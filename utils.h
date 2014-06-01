@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "linkedlist/linkedlist.h"
 
 char* removeID(char* ) ;
 
@@ -12,4 +13,6 @@ int incrementar(char **, int ) ;
 
 int agregar(char**, int , char*) ;
 
-void preparaPedido(char *) ;
+void preparaPedido(char *, LinkedList) ;
+
+int somatorio(char *);

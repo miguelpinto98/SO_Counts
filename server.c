@@ -42,7 +42,7 @@ int main() {
 					x=read(d->fd[0],childBuffer,1024);
 					
 					write(1,childBuffer,x);
-					preparaPedido(childBuffer);
+					preparaPedido(childBuffer,ll);
 					memset(childBuffer,0,1024);
 				}
 			} else {

@@ -13,6 +13,7 @@
 typedef struct sDistrito {
 	char* nome;
 	int fd[2];
+	int agregado;
 } *Distrito, NDistrito;
 
 void insereDistrito(LinkedList, Distrito) ;

@@ -37,12 +37,24 @@ void insereDistrito(LinkedList ll, Distrito d) {
 
 Distrito criaDistrito(char *nm) {
 	Distrito dist = NULL;
-
+	int leu;
 	dist = (Distrito)malloc(sizeof(NDistrito));
 	dist->nome = strdup(nm);
 	pipe(dist->fd);
 
-	//dist->nagrupada = 0;
+	leu = open(nm,O_RDWR,0700);
+	if(leu > 0) {
+		char* buffer = malloc(1024);
+		read(leu,buffer,1024);
+
+		int total = somatorio(buffer);
+		dist->agregado = total;
+		free(buffer);
+	}
+	else {
+		dist->agregado = 0;
+	}
+
 
 	return dist; 
 }

@@ -8,12 +8,12 @@
 
 char* menuInicio(){
 	char* s = malloc(50);
-	char* menu = strdup("###################################\n#                                 #\n# 1 - Incrementar                 #\n# 2 - Agregar                     #\n#                                 #\n###################################\n");
+	char* menu = strdup("###################################\n#                                 #\n# 1 - Incrementar                 #\n# 2 - Agregar                     #\n# 0 - Sair                        #\n#                                 #\n###################################\n");
 	int r;
 	write(1,menu,strlen(menu));
 	r=read(0,s,50);
 
-	if(!((s[0]=='1') || (s[0]=='2')))
+	if(!((s[0]=='1' && strlen(s)==2) || (s[0]=='2' && strlen(s)==2) || (s[0]=='0' && strlen(s)==2)))
 		s="erro";
 	return s;
 }
@@ -177,6 +177,11 @@ int main(int argc, char const *argv[]) {
 			//strcat(line,aux);
 			flag=0;
 		}
+		else
+		if(res[0]=='0'){
+			exit(0);
+		}
+
 
 		if(!flag) {
 			int pp = open("/tmp/options", O_WRONLY, 0700);
