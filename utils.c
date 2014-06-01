@@ -87,7 +87,6 @@ int int_len (int value){
   return l;
 }
 
-
 int devolveValor(char* buffer, char* search, int *n, int *x) {
 	char* pointer = strstr(buffer,search);
 	*x = strlen(pointer);
@@ -210,6 +209,7 @@ int agregar(char* prefixo[], int nivel, char* path) {
 		sprintf(agregacao,"\nTOTAL:%d\n",total);
 		write(file,agregacao,strlen(agregacao));
 		close(file);
+		free(buffer);
 	}
 	if (nivel == 1) {
 		distrito = open(prefixo[0],O_RDWR,0700);
@@ -255,6 +255,9 @@ int agregar(char* prefixo[], int nivel, char* path) {
 		sprintf(agregacao,"\nTOTAL:%d\n",total);
 		write(file,agregacao,strlen(agregacao));
 		close(file);
+		free(buffer);
+		free(bufferAux);
+		free(agregacao);
 	}
 
 	if(nivel == 2) {
@@ -271,13 +274,17 @@ int agregar(char* prefixo[], int nivel, char* path) {
 			i++;
 		}
 		strncpy(aux,pointer,i+1);
+		int total = somatorio(aux);
+		free(aux);
+		sprintf(aux,"%d\n",total);
 		write(file,aux,strlen(aux));
 
-		int total = somatorio(aux);
 		char* agregacao = malloc(100);
 		sprintf(agregacao,"\nTOTAL:%d\n",total);
 		write(file,agregacao,strlen(agregacao));
 		close(file);
+		free(buffer);
+		free(agregacao);
 	}
 	return 1;
 }
