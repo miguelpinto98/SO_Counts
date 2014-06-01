@@ -41,9 +41,9 @@ int main() {
 					close(d->fd[1]);
 					x=read(d->fd[0],childBuffer,1024);
 					
-					printf("Antes\n");
-					preparaPedido(childBuffer,x);
-					printf("Depois\n");
+					write(1,childBuffer,x);
+					preparaPedido(childBuffer);
+					memset(childBuffer,0,1024);
 				}
 			} else {
 				close(d->fd[0]);

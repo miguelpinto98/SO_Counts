@@ -12,4 +12,4 @@ int incrementar(char **, int ) ;
 
 int agregar(char**, int , char*) ;
 
-void preparaPedido(char *, int ) ;
+void preparaPedido(char *) ;

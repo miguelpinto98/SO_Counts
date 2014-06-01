@@ -14,9 +14,24 @@ char *removeID(char *s) {
 
 char *getString(char *buff, int *n) {
 	int i;
+	int tam = strlen(buff);
 	char *aux = malloc(strlen(buff));
 
 	for(i=0; buff[i]!=':'; i++)
+		aux[i] = buff[i];
+
+	aux[i] = '\0';
+	*n = i+1;
+
+	return aux;
+}
+
+char *getStringLast(char *buff, int *n) {
+	int i;
+	int tam = strlen(buff);
+	char *aux = malloc(strlen(buff));
+
+	for(i=0; i<tam; i++)
 		aux[i] = buff[i];
 
 	aux[i] = '\0';
@@ -267,7 +282,7 @@ int agregar(char* prefixo[], int nivel, char* path) {
 	return 1;
 }
 
-void preparaPedido(char *buffer, int bufferSize) {
+void preparaPedido(char *buffer) {
 	int lidos = 0, tam = 2;
 	char *array[3];
 	
@@ -280,37 +295,46 @@ void preparaPedido(char *buffer, int bufferSize) {
 	
 	array[1] = strdup(getString(buffer+tam,&lidos));
 	tam += lidos;
-
-	if(tam < bufferSize)
-		array[2] = strdup(getString(buffer+tam,&lidos));
 	
-	if(tipo == 'i')
+	if(tipo == 'i'){
+		array[2] = strdup(getStringLast(buffer+tam,&lidos));
+
 		incrementar(array,valor);
+	}
 	else {
+		array[2] = strdup(getString(buffer+tam,&lidos));
 		tam += lidos;
-		char *str = strdup(getString(buffer+tam,&lidos));
+
+		char *str = strdup(getStringLast(buffer+tam,&lidos));
 
 		agregar(array,valor,str);
 	}
 }
 
-/*int main() {
+/*
+int main() {
 	char* array[3];
 	array[0]="Porto";
-	array[1]="Amarante";
-	array[2]="Cabrões";
+	array[1]="Felgueiras";
+	array[2]="Revinhade";
 	incrementar(array,1);
 
 	char* array2[3];
 	array2[0]="Porto";
-	array2[1]="Amarante";
-	array2[2]="Revinhade";	
+	array2[1]="Porto";
+	array2[2]="Lordelo do Ouro";	
 	incrementar(array2,2);
 
 	array[0]="Porto";
-	array[1]="Amarante";
-	array[2]="ABC";
+	array[1]="Felgueiras";
+	array[2]="Revinhade";
 	incrementar(array,100);
+
+	preparaPedido("i:5:Porto:Felgueiras:Revinhade",31);
+	preparaPedido("i:10:Porto:Porto:Lordelo do Ouro",33);
+	preparaPedido("i:5:Porto:Felgueiras:Revinhade",31);
+
+	preparaPedido("a:0:Porto:ADA",14);
 
 	char* agrega[2];
 	agrega[0] = "Porto";
