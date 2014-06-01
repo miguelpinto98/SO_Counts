@@ -287,14 +287,27 @@ void preparaPedido(char *buffer, int bufferSize) {
 		agregar(array,valor,str);
 	}
 }
-/*
+
 int main() {
 	char* array[3];
 	array[0]="Porto";
 	array[1]="Amarante";
 	array[2]="Cabrões";
 	incrementar(array,100);
-	char* agrega[2];
+
+	
+	array[0]="Porto";
+	array[1]="Amarante";
+	array[2]="ABC";
+	incrementar(array,100);
+	
+	/*
+	array[0]="Porto";
+	array[1]="Amarante";
+	array[2]="ABC";
+	incrementar(array,150);
+	*/
+	/*char* agrega[2];
 	agrega[0] = "Porto";
 	agrega[1] = "Felgueiras";
 	agrega[2] = "Revinhade";
@@ -302,6 +315,6 @@ int main() {
 	char* buffer = "Felgueiras:Revinhade:30\nFelgueiras:Torrados:20\nFelgueiras:Sousa:10\n";
 	char* search = "Felgueiras:Torrados:";
 	//printf("%d\n",devolveValor(buffer,search));
-	//somatorio(buffer);
+	//somatorio(buffer);*/
 	return 1;
-}*/
+}

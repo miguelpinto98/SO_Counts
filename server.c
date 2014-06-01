@@ -11,8 +11,7 @@
 
 int main() {
 	int mk = mkfifo("/tmp/options",0666);
-	int pp = open("/tmp/options", O_RDONLY, 0700);
-
+	
 	LinkedList ll = createLinkedList(NULL,NULL);
 
 	char buff[1024];
@@ -21,14 +20,15 @@ int main() {
 	Distrito d = NULL;
 
 	while(j) {
+		int pp = open("/tmp/options", O_RDONLY, 0700);
 		n = read(pp,buff,1024);
-		
+		close(pp);
+
 		int in = getNumero((buff+2),&indice);
 		tam = 2 + indice;
 		char* distritoNome = getString((buff+tam),&indice);
 
 		if((d = verificaDistrito(ll,distritoNome)) != NULL) {
-			close(d->fd[0]);
 			write(d->fd[1],buff,n);
 		} else {
 			d = criaDistrito(distritoNome);
@@ -41,12 +41,14 @@ int main() {
 					close(d->fd[1]);
 					x=read(d->fd[0],childBuffer,1024);
 					
+					printf("Antes\n");
 					preparaPedido(childBuffer,x);
+					printf("Depois\n");
 				}
 			} else {
 				close(d->fd[0]);
 				write(d->fd[1],buff,n);
-				close(d->fd[0]);
+				//close(d->fd[0]);
 			}
 		}
 	}

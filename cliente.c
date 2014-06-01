@@ -68,9 +68,7 @@ char* menuIncrementar(){
 	strcat(res,":");
 	strcat(res,concelho);
 	strcat(res,":");
-	strcat(res,freguesia);
-
-	
+	strcat(res,freguesia);	
 	
 	return res;
 }
@@ -154,7 +152,7 @@ char* menuAgregar(){
 }
 
 int main(int argc, char const *argv[]) {
-	int pp = open("/tmp/options", O_WRONLY, 0700);
+	
 	int flag = 1;
 
 	while(flag){
@@ -180,8 +178,12 @@ int main(int argc, char const *argv[]) {
 			flag=0;
 		}
 
-		if(!flag)
+		if(!flag) {
+			int pp = open("/tmp/options", O_WRONLY, 0700);
 			write(pp, line, strlen(line));
+			close(pp);
+		}
 	}
+
 	return 0;
 }
