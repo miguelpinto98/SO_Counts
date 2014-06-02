@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "linkedlist/linkedlist.h"
+#include "utils.h"
 
 #include <unistd.h>
 #include <fcntl.h>
