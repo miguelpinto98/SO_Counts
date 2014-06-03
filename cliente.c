@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>
 
 char* menuInicio(){
 	char* s = malloc(50);
@@ -168,7 +169,6 @@ void handler() {
 }
 
 int main(int argc, char const *argv[]) {
-	
 	signal(SIGALRM,handler);
 
 	int flag = 1, pid;
