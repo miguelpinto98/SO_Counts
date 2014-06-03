@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -102,6 +103,7 @@ char* menuAgregar(){
 
 	if(s[0]=='1'){
 		strcat(res,"0:");
+		//strcat(res,auxpid);
 		write(1,dist,strlen(dist));
 		r2=read(0,distritoAux,50);
 		strncpy(distrito,distritoAux,r2-1);
@@ -111,6 +113,7 @@ char* menuAgregar(){
 
 	if(s[0]=='2'){
 		strcat(res,"1:");
+		//strcat(res,auxpid);
 		write(1,dist,strlen(dist));
 		r2=read(0,distritoAux,50);
 		write(1,conc,strlen(conc));
@@ -151,10 +154,13 @@ char* menuAgregar(){
 	return res;
 }
 
-int main(int argc, char const *argv[]) {
-	
-	int flag = 1;
+void handler() {
+}
 
+int main(int argc, char const *argv[]) {
+	signal(SIGALRM,handler);
+
+	int flag = 1, pid;
 	while(flag){
 		char* res = malloc(10);
 		res = menuInicio();
@@ -171,10 +177,17 @@ int main(int argc, char const *argv[]) {
 			flag=0;
 		} else 
 		if(res[0]=='2'){	//agregar
+			//pid = getpid();
 			line = menuAgregar();
 			//printf("%s",line);
 			//strcpy(line,"a:");
 			//strcat(line,aux);
+			pid = getpid();
+
+			char auxpid[15];
+			sprintf(auxpid,":%d",pid);
+			strcat(line,auxpid);
+
 			flag=0;
 		}
 		else
@@ -187,6 +200,9 @@ int main(int argc, char const *argv[]) {
 			int pp = open("/tmp/options", O_WRONLY, 0700);
 			write(pp, line, strlen(line));
 			close(pp);
+			
+			if(res[0]=='2')
+				pause();
 		}
 	}
 
