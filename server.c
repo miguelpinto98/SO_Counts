@@ -48,7 +48,6 @@ int main() {
 			} else {
 				close(d->fd[0]);
 				write(d->fd[1],buff,n);
-				//close(d->fd[0]);
 			}
 		}
 	}

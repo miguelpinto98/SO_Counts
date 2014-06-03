@@ -1,12 +1,4 @@
 #include "utils.h"
-#include "struct.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
 
 LinkedList ll = NULL;
 
@@ -47,6 +39,19 @@ int getNumero(char *buff, int *n) {
 	char aux[10];
 	
 	for(i=0; buff[i]!=':'; i++) {
+		aux[i] = buff[i];
+	}
+	aux[i] = '\n';
+	*n = i+1;
+
+	return atoi(aux);
+}
+
+int getPID(char *buff, int *n) {
+	int i;
+	char aux[10];
+	
+	for(i=0; buff[i]!='\0'; i++) {
 		aux[i] = buff[i];
 	}
 	aux[i] = '\n';
@@ -428,9 +433,12 @@ void preparaPedido(char *buffer, LinkedList list) {
 		array[2] = strdup(getString(buffer+tam,&lidos));
 		tam += lidos;
 
-		char *str = strdup(getStringLast(buffer+tam,&lidos));
+		char *str = strdup(getString(buffer+tam,&lidos));
+		tam += lidos;
 
-		agregar(array,valor,str);
+		int pid = getPID(buffer+tam,&lidos);
+			agregar(array,valor,str);
+		kill(pid,SIGALRM);
 	}
 }
 
