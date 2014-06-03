@@ -134,7 +134,7 @@ char* menuAgregar(){
 		strcat(res,":");
 		strcat(res,concelho);
 		strcat(res,"::");
-		printf("%s",res);
+		//printf("%s",res);
 	}
 
 	if(s[0]=='3'){
