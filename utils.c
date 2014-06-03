@@ -204,27 +204,50 @@ int incrementar(char *nome[], int valor) {
 }
 
 int tamanho(char* prefixo[]) {
-	int i = 0;
-	while(prefixo[i] != NULL) {
+	int i = 0, res=0;
+	
+	while(i<3) {
+		if(strlen(prefixo[i])!=0)
+			res++;
 		i++;
 	}
-
-	return i;
+	return res;
 }
 
-int agregar(char* prefixo[], int nivel, char* path) {
-	int size = tamanho(prefixo);
-	if(size == 0) {
+int agregacaoConcelho(char* concelho, char* dis, int file) {
+//Distrito:Concelho:200
+	int xx = 0, i = 0, j = 0;
+	int distrito = open(dis,O_RDWR,0700);
+	char* buffer = malloc(1024);
+	char* bufferAux = malloc(1024);
+	int total=0;
+	xx = read(distrito,buffer,1024);
+	close(distrito);
+	char* nome = malloc(200);
+	char* tot = malloc(10);
+	sprintf(nome,"%s:%s:",dis,concelho);
+	int n=contaN(buffer);
+	while((strstr(buffer,nome))!= NULL){
+		char* pointer = strstr(buffer,nome);
+		int ind0 = strcspn(pointer,"\n");
+		pointer=pointer+strlen(dis)+strlen(concelho)+2;
+		int ind1 = strcspn(pointer,":");
+		pointer=pointer+ind1+1;
+		char* valor = malloc(10);
+		int ind2 = strcspn(pointer,"\n");
+		strncpy(valor,pointer,ind2);
+		int val = atoi(valor);
+		total = total + val;
+		sprintf(tot,"%d\n",total);
+			while(buffer[i]!='\n'){
+				i++;
+			}
+			buffer = buffer+i+2;
 	}
-	if(size == 1) {
-		agregaUm(prefixo,nivel,path);
-	}
-	if(size == 2) {
-		agregaDois(prefixo,nivel,path);
-	}
-	if(size == 3) {
-		agregaTres(prefixo,nivel,path);
-	}
+	strcat(nome,tot);
+	write(file,nome,strlen(nome));
+
+	return 1;
 }
 
 int agregaUm(char* prefixo[], int nivel, char* path) {
@@ -235,7 +258,7 @@ int agregaUm(char* prefixo[], int nivel, char* path) {
 		Distrito d = NULL;
 		d = verificaDistrito(ll,prefixo[0]);
 		int total = d->agregado;
-		sprintf(agregacao,"%s:%d\n",prefixo[0],2);
+		sprintf(agregacao,"%s:%d\n",prefixo[0],total);
 		write(file,agregacao,strlen(agregacao));
 		close(file);
 		free(agregacao);
@@ -274,42 +297,6 @@ int agregaUm(char* prefixo[], int nivel, char* path) {
 		close(file);
 		free(buffer);
 	}
-	return 1;
-}
-
-int agregacaoConcelho(char* concelho, char* dis, int file) {
-//Distrito:Concelho:200
-	int xx = 0, i = 0, j = 0;
-	int distrito = open(dis,O_RDWR,0700);
-	char* buffer = malloc(1024);
-	char* bufferAux = malloc(1024);
-	int total=0;
-	xx = read(distrito,buffer,1024);
-	close(distrito);
-	char* nome = malloc(200);
-	char* tot = malloc(10);
-	sprintf(nome,"%s:%s:",dis,concelho);
-	int n=contaN(buffer);
-	while((strstr(buffer,nome))!= NULL){
-		char* pointer = strstr(buffer,nome);
-		int ind0 = strcspn(pointer,"\n");
-		pointer=pointer+strlen(dis)+strlen(concelho)+2;
-		int ind1 = strcspn(pointer,":");
-		pointer=pointer+ind1+1;
-		char* valor = malloc(10);
-		int ind2 = strcspn(pointer,"\n");
-		strncpy(valor,pointer,ind2);
-		int val = atoi(valor);
-		total = total + val;
-		sprintf(tot,"%d\n",total);
-			while(buffer[i]!='\n'){
-				i++;
-			}
-			buffer = buffer+i+2;
-	}
-	strcat(nome,tot);
-	write(file,nome,strlen(nome));
-
 	return 1;
 }
 
@@ -375,7 +362,7 @@ int agregaDois(char* prefixo[], int nivel, char* path) {
 				strcat(bufferAux,line);
 			}
 			j++;
-			free(line);
+			//free(line);
 		}
 
 		write(file,bufferAux,strlen(bufferAux));
@@ -388,10 +375,11 @@ int agregaDois(char* prefixo[], int nivel, char* path) {
 
 int agregaTres(char* prefixo[], int nivel, char* path) {
 	int file, distrito, xx = 0, i = 0, j = 0;
+	int ind;
 	file = open(path, O_WRONLY | O_CREAT, 0777);
 	
 	if(nivel == 0) {
-		//Distrito:Concelho:Freguesia:Valor
+	//Distrito:Concelho:Freguesia:Valor
 		distrito = open(prefixo[0],O_RDWR,0700);
 		char* buffer = malloc(1024);
 		xx = read(distrito,buffer,1024);
@@ -399,14 +387,29 @@ int agregaTres(char* prefixo[], int nivel, char* path) {
 		char* nome = malloc(200);
 		sprintf(nome,"%s:%s:%s:",prefixo[0],prefixo[1],prefixo[2]);
 		char* pointer = strstr(buffer,nome);
-		int ind = strcspn(pointer,"\n");
+		ind = strcspn(pointer,"\n");
 		strncpy(nome,pointer,ind+1);
+
 		write(file,nome,strlen(nome));
 		close(file);
-		free(buffer);
-		free(nome);
-		}
+	}
 	return 1;
+}
+
+int agregar(char* prefixo[], int nivel, char* path) {
+	int size = tamanho(prefixo);
+	if(size == 0) {
+	}
+	if(size == 1) {
+		agregaUm(prefixo,nivel,path);
+	}
+	if(size == 2) {
+		agregaDois(prefixo,nivel,path);
+	}
+	if(size == 3) {
+		agregaTres(prefixo,nivel,path);
+	}
+	return 0;
 }
 
 void preparaPedido(char *buffer, LinkedList list) {

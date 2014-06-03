@@ -147,7 +147,7 @@ char* menuAgregar(){
 		strncpy(distrito,distritoAux,r2-1);
 		strncpy(concelho,concelhoAux,r3-1);
 		strncpy(freguesia,freguesiaAux,r4-1);
-		strcat(res,"2:");
+		strcat(res,"0:");
 		strcat(res,distrito);
 		strcat(res,":");
 		strcat(res,concelho);
