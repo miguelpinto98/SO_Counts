@@ -1,6 +1,5 @@
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/wait.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,7 +29,7 @@ char* menuIncrementar(){
 	char* concelhoAux = malloc(100);
 	char* freguesiaAux = malloc(100);
 	char* numIncAux = malloc(100);
-	char* menu = strdup("################################\n#         Incrementar          #\n#                              #\n# Em que distrito?             #\n");
+	char* menu = strdup("	################################\n#         Incrementar          #\n#                              #\n# Em que distrito?             #\n");
 	write(1,menu,strlen(menu));
 	r1=read(0,distritoAux,100);
 	//printf("%s\n", distritoAux);
@@ -85,8 +84,8 @@ char* menuAgregar(){
 	char* concelhoAux = malloc(50);
 	char* freguesiaAux = malloc(50);
 	char* pathAux = malloc(50);
-	char* menu = strdup("################################\n#           Agregar            #\n#                              #\n# 1 - Por distrito             #\n# 2 - Por concelho             #\n# 3 - Por freguesia            #\n#                              #\n################################\n");
-	int r,r2,r3,r4,r5;
+	char* menu = strdup("#######################################################\n#                        Agregar                      #\n#                                                     #\n# Quantos prefixos pretende inserir (1,2 ou 3):       #\n#                                                     #\n#######################################################\n");
+	int r,r2,r3,r4,r5,r6,r7;
 	write(1,menu,strlen(menu));
 	r=read(0,s,50);
 
@@ -96,38 +95,48 @@ char* menuAgregar(){
 	}
 
 	strcpy(res,"a:");
-
+	char* s1 = malloc(10);
+	char* s2 = malloc(10);
 	char* dist = strdup("# Distrito?                    #\n");
 	char* conc = strdup("# Concelho?                    #\n");
 	char* freg = strdup("# Freguesia?                   #\n");
+	char* nivel012 = strdup("#######################################################\n#                                                     #\n# Qual o nível?                                       #\n#                                                     #\n# 0 - Por distrito                                    #\n# 1 - Por concelhos                                   #\n# 2 - Por freguesias                                  #\n#                                                     #\n#######################################################\n");
+	char* nivel01 = strdup("#######################################################\n#                                                     #\n# Qual o nível?                                       #\n#                                                     #\n# 0 - Por concelho                                    #\n# 1 - Por freguesias                                  #\n#                                                     #\n#######################################################\n");
 
 	if(s[0]=='1'){
-		strcat(res,"0:");
-		//strcat(res,auxpid);
+		
 		write(1,dist,strlen(dist));
 		r2=read(0,distritoAux,50);
 		strncpy(distrito,distritoAux,r2-1);
+		write(1,nivel012,strlen(nivel012));
+		r6=read(0,s2,50);
+		strncpy(s1,s2,r6-1);
+		strcat(res,s1);
+		strcat(res,":");
 		strcat(res,distrito);
 		strcat(res,":::");
 	}
 
 	if(s[0]=='2'){
-		strcat(res,"1:");
-		//strcat(res,auxpid);
 		write(1,dist,strlen(dist));
 		r2=read(0,distritoAux,50);
 		write(1,conc,strlen(conc));
 		r3=read(0,concelhoAux,50);
 		strncpy(distrito,distritoAux,r2-1);
 		strncpy(concelho,concelhoAux,r3-1);
+		write(1,nivel01,strlen(nivel01));
+		r6=read(0,s2,50);
+		strncpy(s1,s2,r6-1);
+		strcat(res,s1);
+		strcat(res,":");
 		strcat(res,distrito);
 		strcat(res,":");
 		strcat(res,concelho);
 		strcat(res,"::");
+		printf("%s",res);
 	}
 
 	if(s[0]=='3'){
-		strcat(res,"2:");
 		write(1,dist,strlen(dist));
 		r2=read(0,distritoAux,50);
 		write(1,conc,strlen(conc));
@@ -137,6 +146,7 @@ char* menuAgregar(){
 		strncpy(distrito,distritoAux,r2-1);
 		strncpy(concelho,concelhoAux,r3-1);
 		strncpy(freguesia,freguesiaAux,r4-1);
+		strcat(res,"2:");
 		strcat(res,distrito);
 		strcat(res,":");
 		strcat(res,concelho);
@@ -158,9 +168,11 @@ void handler() {
 }
 
 int main(int argc, char const *argv[]) {
+	
 	signal(SIGALRM,handler);
 
 	int flag = 1, pid;
+
 	while(flag){
 		char* res = malloc(10);
 		res = menuInicio();
@@ -177,7 +189,6 @@ int main(int argc, char const *argv[]) {
 			flag=0;
 		} else 
 		if(res[0]=='2'){	//agregar
-			//pid = getpid();
 			line = menuAgregar();
 			//printf("%s",line);
 			//strcpy(line,"a:");
